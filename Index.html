@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>陈氏家常菜</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --bg: #F6F4F0;
+  --card: #FFFFFF;
+  --text: #1C1C1C;
+  --gray: #777;
+  --light-gray: #AAA;
+  --border: #E2E0DC;
+  --gold: #A48654;
+  --gold-dark: #8D7247;
+}
+
+.dark {
+  --bg: #121212;
+  --card: #1E1E1E;
+  --text: #F0EDE8;
+  --gray: #A09C96;
+  --border: #333;
+  --gold: #BFA87F;
+  --gold-dark: #A48654;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  padding: 16px;
+}
+
+/* 标题区 */
+.header {
+  text-align: center;
+  margin: 12px 0 24px;
+}
+.header h1 {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--gold);
+}
+.header .subtitle {
+  font-size: 12px;
+  color: var(--gray);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* 搜索 */
+.search-box {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 15px;
+  margin-bottom: 16px;
+}
+.search-box::placeholder {
+  color: var(--light-gray);
+}
+
+/* 标签横向滚动 */
+.tag-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+.tag {
+  padding: 8px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.tag.active {
+  background: var(--gold);
+  color: #fff;
+  border-color: var(--gold);
+}
+
+/* 添加按钮 */
+.add-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+.add-btn:active {
+  background: var(--gold-dark);
+}
+
+/* 菜谱列表 */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.recipe-card {
+  background: var(--card);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.recipe-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.recipe-info {
+  padding: 20px;
+}
+.recipe-title {
+  font-size: 19px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.recipe-cate {
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+}
+.ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.ing-tag {
+  padding: 4px 10px;
+  background: rgba(164, 134, 84, 0.08);
+  color: var(--gold-dark);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.steps {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-line;
+  margin-bottom: 18px;
+}
+.action-row {
+  display: flex;
+  gap: 12px;
+}
+.action-row button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+}
+
+/* 弹窗 */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+}
+.modal.show {
+  display: flex;
+}
+.modal-box {
+  width: 100%;
+  max-width: 400px;
+  background: var(--card);
+  border-radius: 20px;
+  padding: 24px;
+}
+.modal-box h3 {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.modal-box input,
+.modal-box textarea {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+}
+.modal-box textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+.modal-actions button {
+  flex:1;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+}
+.btn-cancel {
+  background: var(--border);
+  color: var(--text);
+}
+.btn-save {
+  background: var(--gold);
+  color: #fff;
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--gray);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 30px;
+}
+.page {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  font-size: 14px;
+}
+.page.active {
+  background: var(--gold);
+  color: #fff;
+  border-color: var(--gold);
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>陈氏家常菜</h1>
+  <div class="subtitle">CHEN'S HOME CUISINE</div>
+</div>
+
+<input class="search-box" id="search" placeholder="搜索菜名 / 食材 / 口味">
+
+<div class="tag-scroll" id="tagScroll"></div>
+
+<button class="add-btn" id="openAdd">＋ 添加新菜谱</button>
+
+<div class="list" id="list"></div>
+<div class="pagination" id="pagination"></div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3 id="modalTitle">添加菜谱</h3>
+    <input id="edit-title" placeholder="菜名">
+    <input id="edit-image" placeholder="图片链接">
+    <input id="edit-category" placeholder="菜系/口味">
+    <input id="edit-ingredients" placeholder="食材，用英文逗号分隔">
+    <textarea id="edit-steps" placeholder="做法步骤"></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancel">取消</button>
+      <button class="btn-save" id="save">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE = 'chen_recipe_premium'
+const PAGE_SIZE = 3
+let currentTag = 'all'
+let search = ''
+let page = 1
+let editId = null
+
+function initData() {
+  if (!localStorage.getItem(STORAGE)) {
+    const def = [
+      {
+        id: 1,
+        title: '番茄炒蛋',
+        image: 'https://pic.qqtn.com/up/2020-7/2020070609280148433.jpg',
+        category: '家常小炒',
+        ingredients: ['番茄','鸡蛋','盐','油'],
+        steps: '1. 鸡蛋打散加盐调味\n2. 番茄洗净切块\n3. 热锅热油先炒蛋，盛出备用\n4. 炒番茄出汁，再倒回鸡蛋\n5. 翻炒均匀即可出锅'
+      },
+      {
+        id: 2,
+        title: '酸辣土豆丝',
+        image: 'https://www.sichuan.cn/uploadfile/2021/05/20200520155126_61628.jpg',
+        category: '川味小炒',
+        ingredients: ['土豆','辣椒','醋','盐','蒜'],
+        steps: '1. 土豆切丝泡水去淀粉\n2. 蒜与辣椒爆香\n3. 大火快炒土豆丝\n4. 加醋、盐快速调味出锅'
+      }
+    ]
+    localStorage.setItem(STORAGE, JSON.stringify(def))
+  }
+}
+
+function get() {
+  return JSON.parse(localStorage.getItem(STORAGE) || '[]')
+}
+function set(arr) {
+  localStorage.setItem(STORAGE, JSON.stringify(arr))
+}
+
+function allIng() {
+  const ings = get().flatMap(x => x.ingredients)
+  return [...new Set(ings)]
+}
+
+function renderTags() {
+  const wrap = document.getElementById('tagScroll')
+  let html = `<div class="tag ${currentTag=='all'?'active':''}" data-key="all">全部</div>`
+  allIng().forEach(i => {
+    html += `<div class="tag ${currentTag==i?'active':''}" data-key="${i}">${i}</div>`
+  })
+  wrap.innerHTML = html
+}
+
+function filterList() {
+  let list = get()
+  if (search) {
+    const q = search.toLowerCase()
+    list = list.filter(x =>
+      x.title.toLowerCase().includes(q) ||
+      x.category.toLowerCase().includes(q) ||
+      x.ingredients.some(i => i.toLowerCase().includes(q))
+    )
+  }
+  if (currentTag !== 'all') {
+    list = list.filter(x => x.ingredients.includes(currentTag))
+  }
+  return list
+}
+
+function render() {
+  const list = filterList()
+  const total = list.length
+  const totalPage = Math.ceil(total / PAGE_SIZE)
+  if (page > totalPage && totalPage > 0) page = totalPage
+  const start = (page-1)*PAGE_SIZE
+  const end = start + PAGE_SIZE
+  const data = list.slice(start, end)
+
+  const el = document.getElementById('list')
+  if (data.length === 0) {
+    el.innerHTML = '<div class="empty">暂无菜谱</div>'
+    document.getElementById('pagination').innerHTML = ''
+    return
+  }
+
+  el.innerHTML = data.map(x => `
+    <div class="recipe-card">
+      < img src="${x.image}" class="recipe-img" alt="">
+      <div class="recipe-info">
+        <div class="recipe-title">${x.title}</div>
+        <div class="recipe-cate">${x.category}</div>
+        <div class="ingredients">
+          ${x.ingredients.map(i=>`<span class="ing-tag">${i}</span>`).join('')}
+        </div>
+        <div class="steps">${x.steps}</div>
+        <div class="action-row">
+          <button class="edit" data-id="${x.id}">编辑</button>
+          <button class="del" data-id="${x.id}">删除</button>
+        </div>
+      </div>
+    </div>
+  `).join('')
+
+  document.querySelectorAll('.edit').forEach(e => {
+    e.onclick = () => openEdit(e.dataset.id)
+  })
+  document.querySelectorAll('.del').forEach(e => {
+    e.onclick = () => {
+      if(confirm('确定删除？')){
+        const arr = get().filter(x => x.id != e.dataset.id)
+        set(arr)
+        renderTags()
+        render()
+      }
+    }
+  })
+
+  const p = document.getElementById('pagination')
+  p.innerHTML = ''
+  for(let i=1;i<=totalPage;i++){
+    p.innerHTML += `<div class="page ${i==page?'active':''}" data-p="${i}">${i}</div>`
+  }
+  document.querySelectorAll('.page').forEach(x => {
+    x.onclick = () => {
+      page = Number(x.dataset.p)
+      render()
+    }
+  })
+}
+
+document.getElementById('openAdd').onclick = () => {
+  editId = null
+  document.getElementById('modalTitle').innerText = '添加菜谱'
+  document.querySelectorAll('.modal-box input, .modal-box textarea').forEach(i=>i.value='')
+  document.getElementById('modal').classList.add('show')
+}
+
+function openEdit(id) {
+  const item = get().find(x => x.id == id)
+  if (!item) return
+  editId = id
+  document.getElementById('modalTitle').innerText = '编辑菜谱'
+  document.getElementById('edit-title').value = item.title
+  document.getElementById('edit-image').value = item.image
+  document.getElementById('edit-category').value = item.category
+  document.getElementById('edit-ingredients').value = item.ingredients.join(',')
+  document.getElementById('edit-steps').value = item.steps
+  document.getElementById('modal').classList.add('show')
+}
+
+document.getElementById('save').onclick = () => {
+  const title = document.getElementById('edit-title').value.trim()
+  const image = document.getElementById('edit-image').value.trim()
+  const cate = document.getElementById('edit-category').value.trim()
+  const ings = document.getElementById('edit-ingredients').value.trim()
+  const step = document.getElementById('edit-steps').value.trim()
+  if (!title || !cate || !ings) {
+    alert('请填写完整信息')
+    return
+  }
+  const ingArr = ings.split(',').map(i=>i.trim()).filter(Boolean)
+  const arr = get()
+  if (editId === null) {
+    arr.unshift({
+      id: Date.now(), title, image, category: cate, ingredients: ingArr, steps: step
+    })
+  } else {
+    const idx = arr.findIndex(x => x.id == editId)
+    if (idx !== -1) {
+      arr[idx] = { ...arr[idx], title, image, category: cate, ingredients: ingArr, steps: step }
+    }
+  }
+  set(arr)
+  document.getElementById('modal').classList.remove('show')
+  renderTags()
+  render()
+}
+
+document.getElementById('cancel').onclick = () => {
+  document.getElementById('modal').classList.remove('show')
+}
+
+document.getElementById('search').oninput = e => {
+  search = e.target.value.toLowerCase()
+  page = 1
+  render()
+}
+
+document.getElementById('tagScroll').onclick = e => {
+  if (e.target.classList.contains('tag')) {
+    currentTag = e.target.dataset.key
+    page = 1
+    renderTags()
+    render()
+  }
+}
+
+initData()
+renderTags()
+render()
+</script>
+</body>
+</html>
